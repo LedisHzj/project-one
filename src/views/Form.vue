@@ -3,13 +3,13 @@
     <el-row>
       <el-col>
         <h1>Form with vuejs and Element ui</h1>
-        <el-card>
+        <el-card :body-style="{ padding: '40px' }" shadow="hover">
           <el-form
             :model="ruleForm"
             :rules="rules"
             ref="ruleForm"
+            label-position="left"
             label-width="120px"
-            class="demo-ruleForm"
           >
             <el-form-item label="Activity name" prop="name">
               <el-input v-model="ruleForm.name"></el-input>
@@ -59,10 +59,20 @@
               <el-button @click="resetForm('ruleForm')">Reset</el-button>
             </el-form-item>
           </el-form>
-          <p v-for="(i, k) in ruleForm" :key="i                                     ">{{k}}: {{ i }}</p>
         </el-card>
       </el-col>
     </el-row>
+    <el-drawer
+      title="Data from form inputs"
+      :visible.sync="drawer"
+      direction="rtl"
+    >
+      <ul class="form-data-list">
+        <li v-for="(value, key) in formOuput" :key="key">
+          {{ key }}: {{ value }}
+        </li>
+      </ul>
+    </el-drawer>
   </div>
 </template>
 
@@ -70,11 +80,11 @@
 export default {
   data() {
     return {
+      formOuput: {},
+      drawer: false,
       ruleForm: {
         name: "",
         region: "",
-        date1: "",
-        date2: "",
         delivery: false,
         type: [],
         resource: "",
@@ -89,8 +99,8 @@ export default {
           },
           {
             min: 3,
-            max: 5,
-            message: "Length should be 3 to 5",
+            max: 10,
+            message: "Length should be 3 to 10",
             trigger: "blur",
           },
         ],
@@ -98,22 +108,6 @@ export default {
           {
             required: true,
             message: "Please select Activity zone",
-            trigger: "change",
-          },
-        ],
-        date1: [
-          {
-            type: "date",
-            required: true,
-            message: "Please pick a date",
-            trigger: "change",
-          },
-        ],
-        date2: [
-          {
-            type: "date",
-            required: true,
-            message: "Please pick a time",
             trigger: "change",
           },
         ],
@@ -146,7 +140,8 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert("submit!");
+          this.formOuput = this.ruleForm;
+          this.drawer = true;
         } else {
           console.log("error submit!!");
           return false;
@@ -159,3 +154,16 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.el-form-item {
+  text-align: start;
+}
+.form-data-list {
+  list-style-type: none;
+  text-align: start;
+  font-size: 14px;
+  font-weight: 500;
+  color: #34495e;
+}
+</style>

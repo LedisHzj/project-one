@@ -27,7 +27,7 @@ const routes = [
     path: '/api',
     name: 'ApiCall',
     component: () => import(/* webpackChunkName: "api" */ '../views/ApiCall.vue')
-  }
+  },
 ]
 
 const router = new VueRouter({
